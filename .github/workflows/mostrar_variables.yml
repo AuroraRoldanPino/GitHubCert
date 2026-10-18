@@ -1,0 +1,77 @@
+name: Mostrar Variables
+
+on:
+  workflow_dispatch:
+
+env:
+  ENV_WORKFLOW_RTL_01: Env_Workflow_RTL_01
+
+permissions:
+  contents: read
+
+jobs:
+  ejemplo:
+    runs-on: ubuntu-latest
+
+    env:
+      ENV_JOB_RTL_01: Env_Job_RTL_01
+
+    steps:
+      - name: Imprimir datos de contexto
+        id: imprimir_contextos
+        env:
+          ENV_STEP_RTL_01: Env_Step_RTL_01
+          JOB_JSON: ${{ toJSON(job) }}
+          JOB_CONTAINER_JSON: ${{ toJSON(job.container) }}
+
+        run: |
+          echo "INFORMACIÓN DE CONTEXTO GITHUB"
+          echo "Referencia: ${{ github.ref }}"
+          echo "Identificador del paso actual: ${{ github.action }}"
+          echo "Repositorio de la ejecución: ${{ github.repository }}"
+
+          echo "INFORMACIÓN DE CONTEXTO JOB"
+          echo "Contenedor del trabajo (JSON): $JOB_CONTAINER_JSON"
+          echo "Estado del trabajo: ${{ job.status }}"
+          echo "Referencia al workflow del trabajo: ${{ job.workflow_ref }}"
+          echo "Repositorio del workflow del trabajo: ${{ job.workflow_repository }}"
+
+          echo "CONTEXTO JOB COMPLETO"
+          printf '%s\n' "$JOB_JSON"
+
+          echo "USO DE VARIABLES DE ENTORNO PREDEFINIDAS"
+          echo "Referencia sobre la rama: $GITHUB_REF"
+
+          echo "USO DE VARIABLES DE ENTORNO PERSONALIZADAS"
+          echo "$ENV_WORKFLOW_RTL_01 - $ENV_JOB_RTL_01 - $ENV_STEP_RTL_01"
+
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Imprimir datos mediante mi acción
+        id: mostrar_contextos
+        uses: ./.github/actions/mostrar-contextos
+        env:
+          ENV_ACTION_STEP_RTL_01: Env_Action_Step_RTL_01
+          
+          
+      - name: condition 1
+        if: runner.os == 'Windows'
+        run: echo "The operating system on the runner is $env:RUNNER_OS."
+        
+      - name: condition 2
+        if: runner.os != 'Windows'
+        run: echo "The operating system on the runner is not Windows, it's $RUNNER_OS."          
+          
+          
+      - name: Set the value
+        id: step_one
+        run: |
+          echo "action_state=yellow" >> "$GITHUB_ENV"
+        
+      - name: Use the value
+        id: step_two
+        run: |
+          printf '%s\n' "$action_state" # This will output 'yellow'          
+        
+        
