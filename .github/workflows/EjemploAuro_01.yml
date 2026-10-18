@@ -8,6 +8,7 @@ on:
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened]
+  # Lo añado yo para ejecutar de forma manual
   workflow_dispatch:
 
 # Environment variables (workflow-level)
