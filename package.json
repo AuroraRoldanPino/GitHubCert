@@ -1,9 +1,14 @@
 {
-  "name": "githubcert-node-minimo",
+  "name": "github-actions-nodejs-example",
   "version": "1.0.0",
-  "private": true,
-  "description": "Proyecto minimo para practicar CI con GitHub Actions",
+  "description": "Minimal Node.js project for the GitHub Actions CI/CD workflow",
+  "main": "src/index.js",
   "scripts": {
-    "test": "node --test suma.test.js"
+    "test:coverage": "node --test --experimental-test-coverage test/unit.test.js && node scripts/write-coverage.js",
+    "test:integration": "node --test test/integration.test.js",
+    "build": "node scripts/build.js"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
